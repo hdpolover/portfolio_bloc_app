@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'colors.dart';
+import 'app_colors.dart';
 
 /// App text styles
 /// Contains all text styles used throughout the application
@@ -69,21 +69,21 @@ class AppTextStyles {
         fontSize: 18.sp,
         fontWeight: FontWeight.w600,
         height: 1.5,
-        color: color ?? AppColors.textOnPrimary,
+        color: color ?? AppColors.textPrimary,
       );
 
   static TextStyle buttonMedium({Color? color}) => GoogleFonts.poppins(
         fontSize: 16.sp,
         fontWeight: FontWeight.w600,
         height: 1.5,
-        color: color ?? AppColors.textOnPrimary,
+        color: color ?? AppColors.textPrimary,
       );
 
   static TextStyle buttonSmall({Color? color}) => GoogleFonts.poppins(
         fontSize: 14.sp,
         fontWeight: FontWeight.w600,
         height: 1.5,
-        color: color ?? AppColors.textOnPrimary,
+        color: color ?? AppColors.textPrimary,
       );
 
   // Special styles

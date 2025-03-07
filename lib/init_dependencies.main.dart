@@ -21,6 +21,34 @@ Future<void> initDependencies() async {
   );
   // Initialize the project
   _initProject();
+  _initAuth();
+}
+
+void _initAuth() {
+  // Register AuthRepository
+  serviceLocator
+    ..registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(
+        remoteDataSource: serviceLocator<AuthRemoteDataSource>(),
+        connectionChecker: serviceLocator<ConnectionChecker>(),
+      ),
+    )
+    ..registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(
+        serviceLocator<SupabaseClient>(),
+      ),
+    )
+    // use case
+    ..registerLazySingleton<SignInUsecase>(
+      () => SignInUsecase(
+        serviceLocator<AuthRepository>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => AuthBloc(
+        signInUsecase: serviceLocator<SignInUsecase>(),
+      ),
+    );
 }
 
 void _initProject() {
@@ -33,7 +61,6 @@ void _initProject() {
     )
     ..registerLazySingleton<ProjectRepository>(
       () => ProjectRepositoryImpl(
-        supabase: serviceLocator<SupabaseClient>(),
         remoteDataSource: serviceLocator<ProjectRemoteDataSource>(),
         connectionChecker: serviceLocator<ConnectionChecker>(),
       ),
