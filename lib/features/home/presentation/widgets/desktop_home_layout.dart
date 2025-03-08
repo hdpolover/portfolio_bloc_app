@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:portofolio_bloc_app/core/theme/app_colors.dart';
-import 'package:portofolio_bloc_app/core/widgets/custom_button.dart';
-import 'package:portofolio_bloc_app/core/widgets/top_bar_nav.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:web_smooth_scroll/web_smooth_scroll.dart';
-
-import '../../../../core/utils/scroll_controller.dart';
 import 'home_section.dart';
 import 'projects_section.dart';
 

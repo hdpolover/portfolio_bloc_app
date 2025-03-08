@@ -1,14 +1,43 @@
 import '../../domain/entities/project.dart';
 
-abstract class ProjectState {}
+abstract class ProjectState {
+  final String? selectedTechStack;
+  final String? sortByDate;
 
-class ProjectInitial extends ProjectState {}
+  const ProjectState({
+    this.selectedTechStack,
+    this.sortByDate,
+  });
+}
 
-class ProjectLoading extends ProjectState {}
+class ProjectInitial extends ProjectState {
+  const ProjectInitial() : super();
+}
+
+class ProjectLoading extends ProjectState {
+  const ProjectLoading() : super();
+}
 
 class ProjectLoaded extends ProjectState {
   final List<Project> projects;
-  ProjectLoaded(this.projects);
+
+  const ProjectLoaded({
+    required this.projects,
+    super.selectedTechStack,
+    super.sortByDate,
+  });
+
+  ProjectLoaded copyWith({
+    List<Project>? projects,
+    String? selectedTechStack,
+    String? sortByDate,
+  }) {
+    return ProjectLoaded(
+      projects: projects ?? this.projects,
+      selectedTechStack: selectedTechStack ?? super.selectedTechStack,
+      sortByDate: sortByDate ?? super.sortByDate,
+    );
+  }
 }
 
 class ProjectError extends ProjectState {

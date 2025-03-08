@@ -9,32 +9,51 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final GetAllProjects getAllProjects;
 
   ProjectBloc({required this.getAllProjects}) : super(ProjectInitial()) {
-    on<LoadProjects>((event, emit) async {
-      try {
-        LoggerService.logInfo('ProjectBloc: Loading projects...');
-        emit(ProjectLoading());
+    on<LoadProjects>(_loadProjects);
+    on<FilterByTechStack>(_filterByTechStack);
+    on<SortByDate>(_sortByDate);
+  }
 
-        final result = await getAllProjects();
+  Future<void> _loadProjects(
+      LoadProjects event, Emitter<ProjectState> emit) async {
+    try {
+      LoggerService.logInfo('ProjectBloc: Loading projects...');
+      emit(const ProjectLoading());
 
-        LoggerService.logInfo('ProjectBloc: Got result from getAllProjects');
+      final result = await getAllProjects();
 
-        result.fold(
-          (failure) {
-            LoggerService.logError(
-                'ProjectBloc: Error loading projects - ${failure.message}');
-            emit(ProjectError(failure.message));
-          },
-          (projects) {
-            LoggerService.logInfo(
-                'ProjectBloc: Loaded ${projects.length} projects');
-            emit(ProjectLoaded(projects));
-          },
-        );
-      } catch (e, stackTrace) {
-        LoggerService.logError('ProjectBloc: Exception occurred: $e');
-        LoggerService.logError(stackTrace.toString());
-        emit(ProjectError('An unexpected error occurred: $e'));
-      }
-    });
+      LoggerService.logInfo('ProjectBloc: Got result from getAllProjects');
+
+      result.fold(
+        (failure) {
+          LoggerService.logError(
+              'ProjectBloc: Error loading projects - ${failure.message}');
+          emit(ProjectError(failure.message));
+        },
+        (projects) {
+          LoggerService.logInfo(
+              'ProjectBloc: Loaded ${projects.length} projects');
+          emit(ProjectLoaded(projects: projects));
+        },
+      );
+    } catch (e, stackTrace) {
+      LoggerService.logError('ProjectBloc: Exception occurred: $e');
+      LoggerService.logError(stackTrace.toString());
+      emit(ProjectError('An unexpected error occurred: $e'));
+    }
+  }
+
+  void _filterByTechStack(FilterByTechStack event, Emitter<ProjectState> emit) {
+    if (state is ProjectLoaded) {
+      final currentState = state as ProjectLoaded;
+      emit(currentState.copyWith(selectedTechStack: event.techStack));
+    }
+  }
+
+  void _sortByDate(SortByDate event, Emitter<ProjectState> emit) {
+    if (state is ProjectLoaded) {
+      final currentState = state as ProjectLoaded;
+      emit(currentState.copyWith(sortByDate: event.sortOrder));
+    }
   }
 }

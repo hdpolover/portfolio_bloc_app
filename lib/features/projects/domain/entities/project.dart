@@ -6,6 +6,7 @@ class Project {
   final String liveDemoLink;
   final List<ProjectTechStack> techStack;
   final List<ProjectImage> images;
+  final DateTime createdAt;
 
   const Project({
     required this.id,
@@ -15,6 +16,7 @@ class Project {
     required this.liveDemoLink,
     required this.techStack,
     this.images = const [],
+    required this.createdAt,
   });
 }
 
@@ -36,11 +38,13 @@ class ProjectTechStack {
   final String id;
   final String projectId;
   final String techStack;
+  final TechStack techStackDetails;
 
   const ProjectTechStack({
     required this.id,
     required this.projectId,
     required this.techStack,
+    required this.techStackDetails,
   });
 }
 

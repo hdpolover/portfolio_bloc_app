@@ -1,3 +1,4 @@
+import 'package:portofolio_bloc_app/features/projects/data/models/tech_stack_model.dart';
 import 'package:portofolio_bloc_app/features/projects/domain/entities/project.dart';
 
 class ProjectTechStackModel extends ProjectTechStack {
@@ -5,6 +6,7 @@ class ProjectTechStackModel extends ProjectTechStack {
     required super.id,
     required super.projectId,
     required super.techStack,
+    required super.techStackDetails,
   });
 
   factory ProjectTechStackModel.fromJson(Map<String, dynamic> json) {
@@ -12,6 +14,8 @@ class ProjectTechStackModel extends ProjectTechStack {
       id: json['id'] as String? ?? '',
       projectId: json['project_id'] as String? ?? '',
       techStack: json['tech_stack'] as String? ?? '',
+      techStackDetails:
+          TechStackModel.fromJson(json['tech_stacks'] as Map<String, dynamic>),
     );
   }
 

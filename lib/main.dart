@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true, // Ensures text scales properly
         builder: (context, child) {
           return MaterialApp.router(
-            title: 'My Portfolio',
+            title: 'HendraCodes',
             theme: AppTheme().codeClarityTheme, // Apply responsive theme
             routerConfig: appRouter, // Use GoRouter
           );

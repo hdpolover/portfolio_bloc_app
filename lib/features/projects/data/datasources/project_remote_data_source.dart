@@ -28,9 +28,10 @@ class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
           *
         ),
         project_techs!inner (
-          *
+          *,
+          tech_stacks:tech_id(*)
         )
-          ''');
+      ''');
 
       LoggerService.logInfo('Supabase response: ${response.toString()}');
 

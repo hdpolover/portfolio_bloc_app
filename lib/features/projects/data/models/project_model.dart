@@ -2,7 +2,6 @@ import 'package:portofolio_bloc_app/core/utils/logger_service.dart';
 import 'package:portofolio_bloc_app/features/projects/data/models/project_image_model.dart';
 import 'package:portofolio_bloc_app/features/projects/data/models/project_tech_stack_model.dart';
 import 'package:portofolio_bloc_app/features/projects/domain/entities/project.dart';
-// i
 
 class ProjectModel extends Project {
   const ProjectModel({
@@ -13,6 +12,7 @@ class ProjectModel extends Project {
     required super.githubLink,
     required super.liveDemoLink,
     super.images = const [],
+    required super.createdAt,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +37,7 @@ class ProjectModel extends Project {
                     ProjectImageModel.fromJson(image as Map<String, dynamic>))
                 .toList() ??
             [],
+        createdAt: DateTime.parse(json['created_at'] as String? ?? ''),
       );
     } catch (e, stackTrace) {
       LoggerService.logError('Error in ProjectModel.fromJson: $e');
@@ -55,6 +56,7 @@ class ProjectModel extends Project {
       'github_link': githubLink,
       'live_demo_link': liveDemoLink,
       'images': images,
+      'created_at': createdAt.toIso8601String(),
     };
   }
 }

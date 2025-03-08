@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flip_card/controllers/flip_card_controllers.dart';
+import 'package:flutter_flip_card/flipcard/flip_card.dart';
+import 'package:flutter_flip_card/modal/flip_side.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:portofolio_bloc_app/core/utils/logger_service.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../domain/entities/project.dart';
 
-class ProjectDetailCard extends StatelessWidget {
+class ProjectDetailCard extends StatefulWidget {
   final Project project;
   final VoidCallback? onDetailsPressed;
 
@@ -16,39 +20,139 @@ class ProjectDetailCard extends StatelessWidget {
   });
 
   @override
+  State<ProjectDetailCard> createState() => _ProjectDetailCardState();
+}
+
+class _ProjectDetailCardState extends State<ProjectDetailCard> {
+  final GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+  final controller = FlipCardController();
+
+  @override
   Widget build(BuildContext context) {
     final bool isMobile = Responsive.isMobile(context);
 
-    return Card(
-      elevation: isMobile ? 3 : 5,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(isMobile ? 10.r : 15.r)),
-      child: Container(
-        padding: EdgeInsets.all(isMobile ? 16.r : 20.r),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProjectImage(context),
-            SizedBox(height: project.images.isNotEmpty ? 15.h : 0),
-            _buildProjectTitle(context),
-            SizedBox(height: isMobile ? 8.h : 10.h),
-            _buildProjectDescription(context),
-            SizedBox(height: 10.h),
-            _buildTechStack(context),
-            Spacer(),
-            _buildActionButtons(context),
-          ],
+    return FlipCard(
+      key: cardKey,
+      rotateSide: RotateSide.left,
+      onTapFlipping:
+          true, //When enabled, the card will flip automatically when touched.
+      axis: FlipAxis.vertical,
+      controller: controller,
+      frontWidget: Card(
+        elevation: isMobile ? 3 : 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(isMobile ? 10.r : 15.r),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(isMobile ? 16.r : 20.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProjectImage(context),
+              SizedBox(height: widget.project.images.isNotEmpty ? 15.h : 0),
+              _buildProjectTitle(context),
+              SizedBox(height: isMobile ? 8.h : 10.h),
+              _buildProjectDescription(context),
+              SizedBox(height: 10.h),
+              _buildTechStack(context),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (widget.project.githubLink.isNotEmpty)
+                    IconButton(
+                      icon: Icon(Icons.code, size: 20.sp),
+                      tooltip: 'GitHub Repository',
+                      onPressed: () {
+                        // Add URL launcher functionality here
+                      },
+                    ),
+                  if (widget.project.liveDemoLink.isNotEmpty)
+                    IconButton(
+                      icon: Icon(Icons.open_in_new, size: 20.sp),
+                      tooltip: 'Live Demo',
+                      onPressed: () {
+                        // Add URL launcher functionality here
+                      },
+                    ),
+                  TextButton(
+                    onPressed: () {
+                      context.goNamed(
+                        'project_detail',
+                        pathParameters: {'id': widget.project.id.toString()},
+                        extra: widget.project,
+                      );
+                    },
+                    child: Text(
+                      "Details",
+                      style: TextStyle(
+                        fontSize: Responsive.isMobile(context) ? 14.sp : 15.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      backWidget: Card(
+        elevation: isMobile ? 3 : 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(isMobile ? 10.r : 15.r),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(isMobile ? 16.r : 20.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Project Details',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: Responsive.isMobile(context) ? 18.sp : 20.sp,
+                ),
+              ),
+              SizedBox(height: 15.h),
+              // Add more detailed info here
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    widget.project.description,
+                    style: TextStyle(
+                      fontSize: Responsive.isMobile(context) ? 14.sp : 15.sp,
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  onPressed: () {
+                    cardKey.currentState?.flipCardController
+                        .flipcard(); // Flip back to front
+                  },
+                  child: Text(
+                    "Back",
+                    style: TextStyle(
+                      fontSize: Responsive.isMobile(context) ? 14.sp : 15.sp,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildProjectImage(BuildContext context) {
-    if (project.images.isEmpty) {
+    if (widget.project.images.isEmpty) {
       return SizedBox.shrink();
     }
 
-    final String imageUrl = project.images.first.imageUrl;
+    final String imageUrl = widget.project.images.first.imageUrl;
     LoggerService.logInfo("Project image URL: $imageUrl");
 
     return ClipRRect(
@@ -117,7 +221,7 @@ class ProjectDetailCard extends StatelessWidget {
 
   Widget _buildProjectTitle(BuildContext context) {
     return Text(
-      project.title,
+      widget.project.title,
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: Responsive.isMobile(context) ? 16.sp : 18.sp,
@@ -129,7 +233,7 @@ class ProjectDetailCard extends StatelessWidget {
 
   Widget _buildProjectDescription(BuildContext context) {
     return Text(
-      project.description,
+      widget.project.description,
       style: TextStyle(
           fontSize: Responsive.isMobile(context) ? 14.sp : 15.sp,
           color: Colors.grey[700]),
@@ -139,7 +243,7 @@ class ProjectDetailCard extends StatelessWidget {
   }
 
   Widget _buildTechStack(BuildContext context) {
-    if (project.techStack.isEmpty) {
+    if (widget.project.techStack.isEmpty) {
       return SizedBox.shrink();
     }
 
@@ -147,19 +251,26 @@ class ProjectDetailCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
-          spacing: 6.w,
-          runSpacing: 6.h,
-          children: project.techStack
-              .map((tech) => Chip(
-                    label:
-                        Text(tech.techStack, style: TextStyle(fontSize: 12.sp)),
-                    visualDensity: VisualDensity.compact,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    padding: EdgeInsets.zero,
-                    labelPadding: EdgeInsets.symmetric(horizontal: 8.w),
-                  ))
-              .toList(),
-        ),
+            spacing: 6.w,
+            runSpacing: 6.h,
+            children: widget.project.techStack.map((tech) {
+              String name = tech.techStackDetails.name;
+
+              return Chip(
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
+                label: Text(
+                  name,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: Responsive.isMobile(context) ? 12.sp : 14.sp,
+                      ),
+                ),
+                visualDensity: VisualDensity.compact,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                padding: EdgeInsets.zero,
+                labelPadding: EdgeInsets.symmetric(horizontal: 8.w),
+              );
+            }).toList()),
         SizedBox(height: 10.h),
       ],
     );
@@ -169,7 +280,7 @@ class ProjectDetailCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        if (project.githubLink.isNotEmpty)
+        if (widget.project.githubLink.isNotEmpty)
           IconButton(
             icon: Icon(Icons.code, size: 20.sp),
             tooltip: 'GitHub Repository',
@@ -177,7 +288,7 @@ class ProjectDetailCard extends StatelessWidget {
               // Add URL launcher functionality here
             },
           ),
-        if (project.liveDemoLink.isNotEmpty)
+        if (widget.project.liveDemoLink.isNotEmpty)
           IconButton(
             icon: Icon(Icons.open_in_new, size: 20.sp),
             tooltip: 'Live Demo',
@@ -186,7 +297,7 @@ class ProjectDetailCard extends StatelessWidget {
             },
           ),
         TextButton(
-          onPressed: onDetailsPressed,
+          onPressed: widget.onDetailsPressed,
           child: Text("Details",
               style: TextStyle(
                   fontSize: Responsive.isMobile(context) ? 14.sp : 15.sp)),

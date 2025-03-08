@@ -24,14 +24,11 @@ class DesktopProjectsGrid extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 36.sp,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(height: 30.h),
-          Expanded(
+          SizedBox(
+            height: 600.h,
             child: projects.isEmpty
                 ? _buildEmptyState(context)
                 : GridView.builder(
@@ -98,10 +95,10 @@ class TabletProjectsGrid extends StatelessWidget {
   final String title;
 
   const TabletProjectsGrid({
-    Key? key,
+    super.key,
     required this.projects,
     this.title = "All Projects",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

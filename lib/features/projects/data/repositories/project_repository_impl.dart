@@ -36,6 +36,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
           liveDemoLink: project.liveDemoLink,
           techStack: project.techStack,
           images: project.images,
+          createdAt: project.createdAt,
         );
       }).toList();
 

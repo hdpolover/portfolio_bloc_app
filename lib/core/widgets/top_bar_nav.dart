@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:portofolio_bloc_app/core/widgets/custom_button.dart';
+import 'package:portofolio_bloc_app/core/widgets/nav_bar_button.dart';
 
 class TopBarNav extends StatelessWidget implements PreferredSizeWidget {
   const TopBarNav({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Get current route to determine active button
+    final String currentRoute = GoRouterState.of(context).matchedLocation;
+
     return AppBar(
       centerTitle: false,
       automaticallyImplyLeading: false,
@@ -32,45 +35,42 @@ class TopBarNav extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CustomButton(
-                      onPressed: () {
-                        context.goNamed('home');
-                      },
-                      child: const Text('Home')),
+                  NavBarButton(
+                    isActive: currentRoute == '/' || currentRoute == '/home',
+                    onPressed: () {
+                      context.goNamed('home');
+                    },
+                    child: const Text('Home'),
+                  ),
                   const SizedBox(width: 20),
-                  CustomButton(
-                      onPressed: () {
-                        context.goNamed('about');
-                      },
-                      child: const Text('About Me')),
+                  NavBarButton(
+                    isActive: currentRoute.startsWith('/about'),
+                    onPressed: () {
+                      context.goNamed('about');
+                    },
+                    child: const Text('About Me'),
+                  ),
                   const SizedBox(width: 20),
-                  CustomButton(
-                      onPressed: () {
-                        context.goNamed('projects');
-                      },
-                      child: const Text('Projects')),
+                  NavBarButton(
+                    isActive: currentRoute.startsWith('/projects') ||
+                        currentRoute.startsWith('/projects/'),
+                    onPressed: () {
+                      context.goNamed('projects');
+                    },
+                    child: const Text('Projects'),
+                  ),
                   const SizedBox(width: 20),
-                  CustomButton(onPressed: () {}, child: const Text('Contact')),
+                  NavBarButton(
+                    isActive: currentRoute.startsWith('/contact'),
+                    onPressed: () {},
+                    child: const Text('Contact'),
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-      // actions: [
-      //   CustomButton(
-      //       onPressed: () {
-      //         context.pushNamed('home');
-      //       },
-      //       child: const Text('Home')),
-      //   CustomButton(
-      //       onPressed: () {
-      //         context.pushNamed('projects');
-      //       },
-      //       child: const Text('Projects')),
-      //   CustomButton(onPressed: () {}, child: const Text('About Me')),
-      //   CustomButton(onPressed: () {}, child: const Text('Contact')),
-      // ],
     );
   }
 

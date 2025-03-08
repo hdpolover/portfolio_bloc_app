@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:portofolio_bloc_app/core/theme/app_colors.dart';
 import 'package:portofolio_bloc_app/core/widgets/custom_button.dart';
+import 'package:portofolio_bloc_app/core/widgets/footer.dart';
 import 'package:portofolio_bloc_app/core/widgets/top_bar_nav.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
@@ -39,7 +40,12 @@ class _BasePageState extends State<BasePage> {
         child: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _scrollController,
-          child: widget.content,
+          child: Column(
+            children: [
+              widget.content,
+              Footer(),
+            ],
+          ),
         ),
       ),
     );

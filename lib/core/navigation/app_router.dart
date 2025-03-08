@@ -8,6 +8,16 @@ import 'package:portofolio_bloc_app/features/projects/presentation/pages/project
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/projects/presentation/pages/project_page.dart';
 
+transitionPage(BuildContext context, GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}
+
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
@@ -15,31 +25,38 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/auth',
       name: 'auth',
-      builder: (context, state) => AuthPage(),
+      pageBuilder: (context, state) =>
+          transitionPage(context, state, AuthPage()),
     ),
 
     // dashboard
     GoRoute(
       path: '/dashboard',
       name: 'dashboard',
-      builder: (context, state) => DashboardPage(),
+      pageBuilder: (context, state) => transitionPage(
+        context,
+        state,
+        DashboardPage(),
+      ),
     ),
 
     // public routes
     GoRoute(
       path: '/',
       name: 'home',
-      builder: (context, state) => HomePage(),
+      pageBuilder: (context, state) => transitionPage(
+        context,
+        state,
+        HomePage(),
+      ),
     ),
     GoRoute(
       path: '/projects',
       name: 'projects',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: ProjectPage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
+      pageBuilder: (context, state) => transitionPage(
+        context,
+        state,
+        ProjectPage(),
       ),
       routes: [
         GoRoute(
@@ -47,9 +64,11 @@ final GoRouter appRouter = GoRouter(
           name: 'project_detail',
           pageBuilder: (context, state) {
             final project = state.extra as Project;
-            return MaterialPage(
-              key: state.pageKey,
-              child: ProjectDetailPage(
+
+            return transitionPage(
+              context,
+              state,
+              ProjectDetailPage(
                 project: project,
               ),
             );
@@ -62,7 +81,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/about',
       name: 'about',
-      builder: (context, state) => AboutPage(),
+      pageBuilder: (context, state) => transitionPage(
+        context,
+        state,
+        const AboutPage(),
+      ),
     ),
   ],
 );
