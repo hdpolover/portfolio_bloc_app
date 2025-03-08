@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:portofolio_bloc_app/core/widgets/app_loading.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:portofolio_bloc_app/core/widgets/base_page.dart';
 import 'package:portofolio_bloc_app/features/projects/domain/entities/project.dart';
@@ -60,7 +61,10 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
         builder: (context, state) {
           //  handle the state from the BLoC
           if (state is ProjectLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return AppLoading(
+              loadingText: 'Loading project details...',
+              size: 50.sp,
+            );
           } else if (state is ProjectOneLoaded) {
             return _buildContent(state.project);
           } else if (state is ProjectError) {
@@ -84,7 +88,10 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
           }
 
           // Show a loading indicator as default
-          return const Center(child: CircularProgressIndicator());
+          return AppLoading(
+            loadingText: 'Loading project details...',
+            size: 50.sp,
+          );
         },
       ),
     );

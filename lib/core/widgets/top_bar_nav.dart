@@ -28,7 +28,9 @@ class TopBarNav extends StatelessWidget implements PreferredSizeWidget {
           children: [
             Text(
               'HendraCodes',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                  ),
             ),
             const Spacer(),
             Expanded(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:portofolio_bloc_app/core/utils/logger_service.dart';
+import 'package:portofolio_bloc_app/core/widgets/app_loading.dart';
 import 'package:portofolio_bloc_app/core/widgets/base_page.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../../../init_dependencies.dart';
@@ -19,15 +21,32 @@ class ProjectPage extends StatelessWidget {
       create: (context) => serviceLocator<ProjectBloc>()..add(LoadProjects()),
       child: BasePage(
         content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.isMobile(context) ? 20.w : 50.w,
+                vertical: Responsive.isMobile(context) ? 10.h : 20.h,
+              ),
+              child: Text(
+                "My Projects",
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontSize: Responsive.isMobile(context) ? 24.sp : 36.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+              ),
+            ),
+            SizedBox(height: 30.h),
             const ProjectFilters(),
             BlocBuilder<ProjectBloc, ProjectState>(
               builder: (context, state) {
                 if (state is ProjectLoading) {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ));
+                  return AppLoading(
+                    loadingText: 'Loading project details...',
+                    size: 50.sp,
+                    containerHeight: MediaQuery.of(context).size.height * 0.5,
+                  );
                 } else if (state is ProjectLoaded) {
                   return _buildProjectsList(context, state.projects);
                 } else if (state is ProjectError) {

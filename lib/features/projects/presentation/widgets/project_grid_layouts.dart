@@ -19,38 +19,28 @@ class DesktopProjectsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 100.w, vertical: 40.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          SizedBox(height: 30.h),
-          SizedBox(
-            height: 600.h,
-            child: projects.isEmpty
-                ? _buildEmptyState(context)
-                : GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 20.w,
-                      mainAxisSpacing: 20.h,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: projects.length,
-                    itemBuilder: (context, index) => ProjectDetailCard(
-                      project: projects[index],
-                      onDetailsPressed: () {
-                        // Handle project details press
-                        context.go(
-                          '/projects/${projects[index].id}',
-                        );
-                      },
-                    ),
-                  ),
-          ),
-        ],
+      child: SizedBox(
+        height: 600.h,
+        child: projects.isEmpty
+            ? _buildEmptyState(context)
+            : GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 20.w,
+                  mainAxisSpacing: 20.h,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: projects.length,
+                itemBuilder: (context, index) => ProjectDetailCard(
+                  project: projects[index],
+                  onDetailsPressed: () {
+                    // Handle project details press
+                    context.go(
+                      '/projects/${projects[index].id}',
+                    );
+                  },
+                ),
+              ),
       ),
     );
   }
