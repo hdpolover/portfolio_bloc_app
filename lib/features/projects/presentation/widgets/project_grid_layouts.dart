@@ -45,7 +45,6 @@ class DesktopProjectsGrid extends StatelessWidget {
                         // Handle project details press
                         context.go(
                           '/projects/${projects[index].id}',
-                          extra: projects[index],
                         );
                       },
                     ),

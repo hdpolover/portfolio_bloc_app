@@ -63,14 +63,10 @@ final GoRouter appRouter = GoRouter(
           path: ':id',
           name: 'project_detail',
           pageBuilder: (context, state) {
-            final project = state.extra as Project;
-
             return transitionPage(
               context,
               state,
-              ProjectDetailPage(
-                project: project,
-              ),
+              ProjectDetailPage(),
             );
           },
         ),

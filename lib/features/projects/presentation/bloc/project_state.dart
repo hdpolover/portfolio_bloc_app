@@ -18,6 +18,28 @@ class ProjectLoading extends ProjectState {
   const ProjectLoading() : super();
 }
 
+class ProjectOneLoaded extends ProjectState {
+  final Project project;
+
+  const ProjectOneLoaded({
+    required this.project,
+    super.selectedTechStack,
+    super.sortByDate,
+  });
+
+  ProjectOneLoaded copyWith({
+    Project? project,
+    String? selectedTechStack,
+    String? sortByDate,
+  }) {
+    return ProjectOneLoaded(
+      project: project ?? this.project,
+      selectedTechStack: selectedTechStack ?? super.selectedTechStack,
+      sortByDate: sortByDate ?? super.sortByDate,
+    );
+  }
+}
+
 class ProjectLoaded extends ProjectState {
   final List<Project> projects;
 

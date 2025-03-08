@@ -6,6 +6,8 @@ import '../entities/project.dart';
 abstract class ProjectRepository {
   Future<Either<Failure, List<Project>>> getAllProjects();
 
+  Future<Either<Failure, Project>> getProjectById(String projectId);
+
   Future<Either<Failure, void>> addProject(Project project);
   Future<Either<Failure, void>> updateProject(Project project);
   Future<Either<Failure, void>> deleteProject(String projectId);

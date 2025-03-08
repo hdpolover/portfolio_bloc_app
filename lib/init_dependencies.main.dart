@@ -71,6 +71,11 @@ void _initProject() {
         serviceLocator<ProjectRepository>(),
       ),
     )
+    ..registerLazySingleton<GetProjectById>(
+      () => GetProjectById(
+        serviceLocator<ProjectRepository>(),
+      ),
+    )
     ..registerLazySingleton<AddProject>(
       () => AddProject(
         serviceLocator<ProjectRepository>(),
@@ -80,6 +85,7 @@ void _initProject() {
     ..registerFactory(
       () => ProjectBloc(
         getAllProjects: serviceLocator<GetAllProjects>(),
+        getProjectById: serviceLocator<GetProjectById>(),
       ),
     );
 }

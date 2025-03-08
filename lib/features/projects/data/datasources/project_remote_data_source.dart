@@ -5,6 +5,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract interface class ProjectRemoteDataSource {
   Future<List<ProjectModel>> getAllProjects();
 
+  // get by id
+  Future<ProjectModel> getProjectById(String projectId);
+
   Future<void> addProject(ProjectModel project);
 
   Future<void> updateProject(ProjectModel project);
@@ -76,5 +79,33 @@ class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
   Future<void> updateProject(ProjectModel project) {
     // TODO: implement updateProject
     throw UnimplementedError();
+  }
+
+  @override
+  Future<ProjectModel> getProjectById(String projectId) async {
+    try {
+      LoggerService.logInfo('Fetching project with ID: $projectId');
+
+      final response = await supabaseClient.from('projects').select('''
+            *,
+            project_images!inner (
+              *
+            ),
+            project_techs!inner (
+              *,
+              tech_stacks:tech_id(*)
+            )
+          ''').eq('id', projectId);
+
+      if (response.isEmpty) {
+        throw Exception('Project not found');
+      }
+
+      return ProjectModel.fromJson(response.first);
+    } catch (e, stackTrace) {
+      LoggerService.logError('Error in getProjectById: $e');
+      LoggerService.logError(stackTrace.toString());
+      rethrow;
+    }
   }
 }

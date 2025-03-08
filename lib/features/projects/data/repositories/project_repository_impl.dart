@@ -60,4 +60,30 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<Either<Failure, void>> updateProject(Project project) async {
     throw UnimplementedError('updateProject is not implemented yet');
   }
+
+  @override
+  Future<Either<Failure, Project>> getProjectById(String projectId) async {
+    try {
+      if (!await connectionChecker.isConnected) {
+        return Left(ConnectionFailure('No internet connection'));
+      }
+
+      final response = await remoteDataSource.getProjectById(projectId);
+
+      final project = Project(
+        id: response.id,
+        title: response.title,
+        description: response.description,
+        githubLink: response.githubLink,
+        liveDemoLink: response.liveDemoLink,
+        techStack: response.techStack,
+        images: response.images,
+        createdAt: response.createdAt,
+      );
+
+      return Right(project);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

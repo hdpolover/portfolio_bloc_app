@@ -6,6 +6,7 @@ import 'package:portofolio_bloc_app/features/projects/data/repositories/project_
 import 'package:portofolio_bloc_app/features/projects/domain/repositories/project_repository.dart';
 import 'package:portofolio_bloc_app/features/projects/domain/usecases/add_project.dart';
 import 'package:portofolio_bloc_app/features/projects/domain/usecases/get_all_projects.dart';
+import 'package:portofolio_bloc_app/features/projects/domain/usecases/get_project_by_id.dart';
 import 'package:portofolio_bloc_app/features/projects/presentation/bloc/project_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import dotenv

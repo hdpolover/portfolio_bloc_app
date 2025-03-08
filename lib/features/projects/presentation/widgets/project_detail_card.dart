@@ -1,10 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/controllers/flip_card_controllers.dart';
 import 'package:flutter_flip_card/flipcard/flip_card.dart';
 import 'package:flutter_flip_card/modal/flip_side.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:portofolio_bloc_app/core/utils/logger_service.dart';
 import '../../../../core/utils/responsive.dart';
 import '../../domain/entities/project.dart';
@@ -56,42 +54,7 @@ class _ProjectDetailCardState extends State<ProjectDetailCard> {
               SizedBox(height: 10.h),
               _buildTechStack(context),
               Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (widget.project.githubLink.isNotEmpty)
-                    IconButton(
-                      icon: Icon(Icons.code, size: 20.sp),
-                      tooltip: 'GitHub Repository',
-                      onPressed: () {
-                        // Add URL launcher functionality here
-                      },
-                    ),
-                  if (widget.project.liveDemoLink.isNotEmpty)
-                    IconButton(
-                      icon: Icon(Icons.open_in_new, size: 20.sp),
-                      tooltip: 'Live Demo',
-                      onPressed: () {
-                        // Add URL launcher functionality here
-                      },
-                    ),
-                  TextButton(
-                    onPressed: () {
-                      context.goNamed(
-                        'project_detail',
-                        pathParameters: {'id': widget.project.id.toString()},
-                        extra: widget.project,
-                      );
-                    },
-                    child: Text(
-                      "Details",
-                      style: TextStyle(
-                        fontSize: Responsive.isMobile(context) ? 14.sp : 15.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildActionButtons(context),
             ],
           ),
         ),
